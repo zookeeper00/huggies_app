@@ -1,27 +1,36 @@
 steps:
-  # Build the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app', '.']
-
-  # Push the Docker image to Google Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app']
-
-  # Deploy the Docker image to Google Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    args: [
-      'run', 'deploy', 'my-huggingface-web-app',
-      '--image', 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app',
-      '--platform', 'managed',
-      '--region', 'us-central1',
-      '--allow-unauthenticated',
-      '--set-secrets', 'HUGGING_FACE_API_KEY=projects/my-money-428813/secrets/HUGGING_FACE_API_KEY:latest',
-      '--set-secrets', 'BASIC_AUTH_USERNAME=projects/my-money-428813/secrets/BASIC_AUTH_USERNAME:latest',
-      '--set-secrets', 'BASIC_AUTH_PASSWORD=projects/my-money-428813/secrets/BASIC_AUTH_PASSWORD:latest'
-    ]
-
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app', '.']
+ 
+  # Push the Docker image to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app']
+ 
+  # Deploy the Docker image to Google Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run deploy my-huggingface-web-app \
+          --image us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app \
+          --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated \
+          --set-env-vars USERNAME=$$USERNAME,PASSWORD=$$PASSWORD,HUGGING_FACE_API_KEY=$$HUGGING_FACE_API_KEY
+    secretEnv: ['USERNAME', 'PASSWORD', 'HUGGING_FACE_API_KEY']
+ 
+availableSecrets:
+  secretManager:
+  - versionName: projects/my-money-428813/secrets/USERNAME/versions/latest
+    env: 'USERNAME'
+  - versionName: projects/my-money-428813/secrets/PASSWORD/versions/latest
+    env: 'PASSWORD'
+  - versionName: projects/my-money-428813/secrets/HUGGING_FACE_API_KEY/versions/latest
+    env: 'HUGGING_FACE_API_KEY'
+ 
 logsBucket: 'app-demo-ai'
-
+ 
 images:
-  - 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app'
+  - 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app'
