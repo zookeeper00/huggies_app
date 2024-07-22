@@ -30,7 +30,7 @@ availableSecrets:
   - versionName: projects/my-money-428813/secrets/HUGGING_FACE_API_KEY/versions/latest
     env: 'HUGGING_FACE_API_KEY'
  
-logsBucket: 'app-demo-ai'
+logsBucket: 'cloubuild-logs'
  
 images:
   - 'us-central1-docker.pkg.dev/my-money-428813/my-ai-app-test/my-huggingface-web-app'
