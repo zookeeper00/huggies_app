@@ -5,17 +5,9 @@ const basicAuth = require('basic-auth');
 const app = express();
 
 const PORT = process.env.PORT || 8080; // Default to 8080 for Cloud Run
-const BASE_URL = 'http://20.244.110.84:8000/generate/';
-const API_URL = 'https://hub-proxy-service-2fhjcmydtq-uk.a.run.app';
-const API_KEY = process.env.API_KEY;
-const MODEL_NAME = 'gpt-35-turbo';
+const HUGGING_FACE_API_KEY = process.env.HUGGING_FACE_API_KEY;
 const USERNAME = process.env.BASIC_AUTH_USERNAME || 'admin';
 const PASSWORD = process.env.BASIC_AUTH_PASSWORD || 'admin';
-
-if (!API_KEY) {
-  console.error('API_KEY is not set. Please set the API_KEY environment variable.');
-  process.exit(1);
-}
 
 const auth = (req, res, next) => {
   const user = basicAuth(req);
@@ -43,12 +35,12 @@ app.post('/generate-text', async (req, res) => {
 
   try {
     const response = await axios.post(
-      `${BASE_URL}?api_url=${encodeURIComponent(API_URL)}&api_key=${API_KEY}&model_name=${MODEL_NAME}&prompt=${encodeURIComponent(prompt)}`,
-      {},
-      { headers: { 'accept': 'application/json' } }
+      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3',
+      { inputs: prompt },
+      { headers: { Authorization: Bearer ${HUGGING_FACE_API_KEY} } }
     );
 
-    res.json({ text: response.data });
+    res.json({ text: response.data[0].generated_text });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while generating text.' });
@@ -60,5 +52,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(Server is running on http://localhost:${PORT});
 });
