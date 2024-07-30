@@ -16,10 +16,10 @@ steps:
       '--platform', 'managed',
       '--region', 'us-central1',
       '--allow-unauthenticated',
-      '--set-env-vars', 'HUGGING_FACE_API_KEY=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,DB_HOST=34.16.11.198,DB_USER=root,DB_PASSWORD=Sathi@1993,DB_NAME=demo-gen'
+      '--set-env-vars', 'HUGGING_FACE_API_KEY=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,DB_HOST=34.16.11.198,DB_USER=root,DB_PASSWORD=Sathi@1993,DB_NAME=demo-gen,BASIC_AUTH_USERNAME=admin,BASIC_AUTH_PASSWORD=admin'
     ]
 
 logsBucket: 'cloubuild-logs'
 
 images:
-  - 'asia-south1-docker.pkg.dev/vs-code-proj/my-ai-app-test/my-huggingface-web-app'
+  - 'asia-south1-docker.pkg.dev/vs-code-proj/my-ai-app-test/my-huggingface-web-app' 
