@@ -19,7 +19,7 @@ steps:
       '--set-env-vars', 'HUGGING_FACE_API_KEY=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,DB_HOST=34.16.11.198,DB_USER=root,DB_PASSWORD=Sathi@1993,DB_NAME=demo-gen'
     ]
 
-logsBucket: 'app-demo-ai'
+logsBucket: 'cloubuild-logs'
 
 images:
   - 'asia-south1-docker.pkg.dev/vs-code-proj/my-ai-app-test/my-huggingface-web-app'
